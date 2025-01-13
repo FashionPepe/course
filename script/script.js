@@ -19,30 +19,24 @@ document.addEventListener('DOMContentLoaded', () => {
         link.addEventListener('click', toggleMenu);
     });
 });
-document.addEventListener('DOMContentLoaded', function() {
-    const slider = document.querySelector('.slider');
-    const prevButton = document.querySelector('.prev-button');
-    const nextButton = document.querySelector('.next-button');
-    const items = document.querySelectorAll('.slider-item');
-    let currentIndex = 0;
+let currentSlide = 0;
 
-    function moveSlider() {
-        slider.style.transform = `translateX(-${currentIndex * (items[0].offsetWidth + 20)}px)`;
+function moveSlide(direction) {
+    const slides = document.querySelectorAll('.slide');
+    const totalSlides = slides.length;
+
+    // Обновляем индекс текущего слайда
+    currentSlide += direction;
+
+    // Если currentSlide выходит за пределы, сбрасываем его
+    if (currentSlide < 0) {
+        currentSlide = totalSlides - 1;
+    } else if (currentSlide >= totalSlides) {
+        currentSlide = 0;
     }
 
-    nextButton.addEventListener('click', function() {
-        currentIndex = (currentIndex + 1) % items.length;
-        moveSlider();
-    });
-
-    prevButton.addEventListener('click', function() {
-        currentIndex = (currentIndex - 1 + items.length) % items.length;
-        moveSlider();
-    });
-
-    // Автоматическое переключение слайдов
-    setInterval(function() {
-        currentIndex = (currentIndex + 1) % items.length;
-        moveSlider();
-    }, 5000);
-});
+    // Перелистываем слайды
+    const slider = document.querySelector('.slider');
+    const offset = -currentSlide * 100; // Сдвигаем на 100% влево для текущего слайда
+    slider.style.transform = `translateX(${offset}%)`;
+}
