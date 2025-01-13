@@ -1,101 +1,143 @@
+/* Общие стили */
 body {
     background-color: rgb(231, 231, 231);
-    margin: 0; /* Убираем отступы страницы */
+    margin: 0;
     padding: 0;
+    font-family: Arial, sans-serif;
 }
 
 header {
-    position: fixed; /* Фиксируем шапку при прокрутке */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 70px;
     box-shadow: 0px 0px 70px rgba(0, 0, 0, 0.525);
     background-color: white;
-    display: flex; /* Используем flex для гибкой раскладки */
-    align-items: center; /* Центрируем элементы по вертикали */
-    justify-content: space-between; /* Пространство между логотипом и меню */
-    padding: 0 20px; /* Внутренние отступы */
-    z-index: 1000; /* Поверх других элементов */
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 1000;
 }
 
 .logo-warper {
     display: inline-block;
-    vertical-align: middle;
+}
+
+.logo {
+    width: 50px;
+    height: auto;
 }
 
 .menu-warper {
-    display: flex; /* Используем flex для меню */
-    justify-content: space-around; /* Распределяем ссылки */
+    display: flex;
+    justify-content: space-around;
     align-items: center;
-    gap: 10px; /* Расстояние между кнопками */
-    width: 400px;
-    height: 100%;
-    margin-right: 20px;
+    gap: 15px;
+    margin-right: 40px;
 }
 
 .link-menu {
-    display: inline-block;
-    padding: 10px 5px; /* Уменьшаем размер кнопок */
-    margin: 0 5px; /* Отступы между кнопками */
+    padding: 8px 16px;
     text-decoration: none;
-    font-family: Arial, sans-serif;
     font-size: 16px;
     color: white;
     background-color: #007BFF;
-    border: none;
     border-radius: 8px;
     transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: auto; /* Убираем фиксированную ширину */
-    white-space: nowrap; /* Предотвращаем перенос текста */
-    width: 100px;
     text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .link-menu:hover {
     background-color: #0056b3;
-    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.2);
     transform: translateY(-3px);
     cursor: pointer;
 }
 
-.link-menu:active {
-    background-color: #004494;
-    transform: translateY(1px);
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-}
-
-.logo {
-    width: 60px;
-}
-.burger-menu{
+/* Бургер меню */
+.burger-menu {
     display: none;
 }
 
-/* Медиазапросы для адаптации */
+.burger-button {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.burger-overlay {
+    position: fixed;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.95);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    transition: left 0.3s ease;
+    z-index: 1000;
+}
+
+.burger-links {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.close-button {
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+.link-burger {
+    text-decoration: none;
+    font-size: 24px;
+    color: #007BFF;
+    padding: 10px 20px;
+    border-radius: 8px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, box-shadow 0.3s;
+}
+
+.link-burger:hover {
+    background-color: #f0f0f0;
+}
+
+/* Анимация для бургер меню */
+.burger-overlay.active {
+    left: 0;
+}
+
+/* Адаптация */
 @media (max-width: 1050px) {
-   
     .menu-warper {
-        flex-wrap: wrap; /* Перенос ссылок на следующую строку */
-        justify-content: center; /* Центрируем меню */
+        flex-wrap: wrap;
+        justify-content: center;
         gap: 5px;
+        margin-right: 40px;
     }
 }
 
-
-
 @media (max-width: 480px) {
-    header {
-        padding: 15px; /* Минимальные отступы */
-    }
     .menu-warper {
         display: none;
     }
-    .link-menu {
-        width: 100%; /* Ссылки растягиваются на ширину */
-        text-align: center; /* Центрируем текст */
-        padding: 10px; /* Увеличиваем отступы для кликабельности */
+    .burger-menu {
+        display: flex;
     }
-   
+    .logo-warper{
+        margin-right: 40px;
+    }
 }
