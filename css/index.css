@@ -7,7 +7,7 @@ body {
 }
 
 header {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -17,12 +17,13 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0 20px;
+    
     z-index: 1000;
 }
 
 .logo-warper {
     display: inline-block;
+    margin-left: 40px;
 }
 
 .logo {
@@ -59,6 +60,7 @@ header {
 /* Бургер меню */
 .burger-menu {
     display: none;
+    margin-left: 20px;
 }
 
 .burger-button {
@@ -139,5 +141,35 @@ header {
     }
     .logo-warper{
         margin-right: 40px;
+        margin-left: 0px;
     }
+}
+footer {
+    background-color: #f8f9fa;
+    color: #333;
+    text-align: center;
+    padding: 20px 10px;
+    font-size: 14px;
+    border-top: 1px solid #ddd;
+}
+
+footer a {
+    color: #007BFF;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.footer-content p {
+    margin: 5px 0;
+}
+main {
+    min-height: calc(100vh - 109px); 
+    padding: 20px; 
+    background-color: #ffffff; 
+    box-sizing: border-box; 
 }
