@@ -1,0 +1,82 @@
+<head>
+  <title>Где знак?</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="../css/search.css">
+  <link rel="stylesheet" href="../css/styles.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    input {
+      display: inline-block;
+      width: 200px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="burger-menu">
+        <button class="burger-button" aria-label="Открыть меню">
+            ☰
+        </button>
+    </div>
+    <div class="logo-warper">
+        <img src="../img/f7up276s9ua.jpg" alt="Где знак?" class="logo">
+    </div>
+    <div class="menu-warper">
+        <a href="" class="link-menu">Главная</a>
+        <a href="" class="link-menu">Поиск</a>
+        <a href="" class="link-menu">О нас</a>
+    </div>
+</header>
+<div class="burger-overlay" aria-hidden="true">
+  <div class="burger-links">
+      <button class="close-button" aria-label="Закрыть меню">✖</button>
+      <a href="" class="link-burger">Главная</a>
+      <a href="" class="link-burger">Поиск</a>
+      <a href="" class="link-burger">О нас</a>
+  </div>
+</div>
+<main>
+  <div class="criteria-warper">
+  <h1>Дорожные знаки</h1>
+
+  <div>
+    <label>Административный округ:</label>
+    <input type="text" id="districts" list="districts-list" onchange="loadAreas()" placeholder="Выберите округ">
+    <datalist id="districts-list"></datalist>
+  </div>
+
+  <div>
+    <label>Район:</label>
+    <input type="text" id="areas" list="areas-list" onchange="loadStreets()" disabled placeholder="Выберите район">
+    <datalist id="areas-list"></datalist>
+  </div>
+
+  <div>
+    <label>Улица:</label>
+    <input type="text" id="streets" list="streets-list" onchange="loadTypes()" disabled placeholder="Выберите улицу">
+    <datalist id="streets-list"></datalist>
+  </div>
+
+  <div>
+    <label>Тип знака:</label>
+    <input type="text" id="types" list="types-list" disabled placeholder="Выберите тип знака">
+    <datalist id="types-list"></datalist>
+  </div>
+
+  <button class="search-btn" onclick="searchSigns()">Поиск</button>
+</div>
+
+  <div id="results"></div>
+
+</main>
+<footer>
+  <div class="footer-content">
+      <p>© 2025 Где знак? Все права защищены.</p>
+      <p>Сайт: gdeznak.ru</p>
+      <p>Поддержка: <a href="mailto:support@gdeznak.ru">support@gdeznak.ru</a></p>
+  </div>
+</footer>
+
+  <script src="../script/search.js"></script>
+</body>
+</html>
