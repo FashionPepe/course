@@ -6,12 +6,6 @@
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <script src="https://api-maps.yandex.ru/v3/?apikey=ea7d276f-6985-4a62-8625-632bda744a51&lang=ru_RU"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    input {
-      display: inline-block;
-      width: 200px;
-    }
-  </style>
 </head>
 <body>
   <header>
@@ -67,8 +61,9 @@
 
   <button class="search-btn" onclick="searchSigns()">Поиск</button>
 </div>
-
-  <div id="map" style="width: 600px; height: 400px"></div>
+  <div class="map-warper">
+  <div id="map"></div>
+</div>
 
 </main>
 <footer>
