@@ -3,6 +3,8 @@
   <meta charset="UTF-8">
   <link rel="stylesheet" href="../css/search.css">
   <link rel="stylesheet" href="../css/styles.css">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <script src="https://api-maps.yandex.ru/v3/?apikey=ea7d276f-6985-4a62-8625-632bda744a51&lang=ru_RU"></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     input {
@@ -66,7 +68,7 @@
   <button class="search-btn" onclick="searchSigns()">Поиск</button>
 </div>
 
-  <div id="results"></div>
+  <div id="map" style="width: 600px; height: 400px"></div>
 
 </main>
 <footer>
@@ -78,5 +80,6 @@
 </footer>
 
   <script src="../script/search.js"></script>
+  <script src="../script/map.js"></script>
 </body>
 </html>

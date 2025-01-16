@@ -70,21 +70,8 @@
     cursor: not-allowed;
   }
   
-  #results {
-    margin-top: 30px;
-  }
-  
-  #results ul {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  #results li {
-    background-color: #f9f9f9;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    padding: 12px;
-    margin-bottom: 10px;
+  #map{
+    width: 500px;
   }
   
   #results li:nth-child(even) {
