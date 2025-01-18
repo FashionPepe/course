@@ -1,28 +1,45 @@
-initMap();
-
 async function initMap() {
-    // Промис `ymaps3.ready` будет зарезолвлен, когда загрузятся все компоненты основного модуля API
+    // Дождемся полной загрузки API Yandex Maps 3
     await ymaps3.ready;
 
-    const {YMap, YMapDefaultSchemeLayer} = ymaps3;
+    const { YMap, YMapDefaultSchemeLayer, YMapDefaultFeaturesLayer, YMapMarker } = ymaps3;
 
-    // Иницилиазируем карту
+    // Создаем карту
     const map = new YMap(
-        // Передаём ссылку на HTMLElement контейнера
         document.getElementById('map'),
-
-        // Передаём параметры инициализации карты
         {
             location: {
-                // Координаты центра карты
                 center: [37.588144, 55.733842],
-
-                // Уровень масштабирования
                 zoom: 10
             }
         }
     );
 
-    // Добавляем слой для отображения схематической карты
+    // Добавляем слой с картой по умолчанию
     map.addChild(new YMapDefaultSchemeLayer());
+
+    // Добавляем слой объектов по умолчанию
+    map.addChild(new YMapDefaultFeaturesLayer());
+
+    // Создаем элемент для маркера
+    const markerElement = document.createElement('div');
+    markerElement.className = 'marker-class';
+    markerElement.innerText = "I'm a marker!";
+    markerElement.addEventListener('click', function() {
+        alert("Маркер")
+    })
+
+    // Создаем маркер
+    const marker = new YMapMarker(
+        {
+            coordinates: [37.588144, 55.733842]
+        },
+        markerElement
+    );
+
+    // Добавляем маркер на карту
+    map.addChild(marker);
 }
+
+// Инициализируем карту
+initMap();
