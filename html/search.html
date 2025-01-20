@@ -19,18 +19,23 @@
         <img src="../img/f7up276s9ua.jpg" alt="Где знак?" class="logo">
     </div>
     <div class="menu-warper">
-        <a href="" class="link-menu">Главная</a>
-        <a href="" class="link-menu">Поиск</a>
-        <a href="" class="link-menu">О нас</a>
+        <a href="./index.html" class="link-menu">Главная</a>
+        <a href="./search.html" class="link-menu">Поиск</a>
+        <a href="./login.html" id="login" class="link-menu">Вход</a>
+        <a href="./register.html" id="register" class="link-menu">Регистрация</a>
+        <a href="" id="logout" onclick="logoutUser()" class="link-menu">Выход</a>
+
     </div>
 </header>
 <div class="burger-overlay" aria-hidden="true">
-  <div class="burger-links">
-      <button class="close-button" aria-label="Закрыть меню">✖</button>
-      <a href="" class="link-burger">Главная</a>
-      <a href="" class="link-burger">Поиск</a>
-      <a href="" class="link-burger">О нас</a>
-  </div>
+    <div class="burger-links">
+        <button class="close-button" aria-label="Закрыть меню">✖</button>
+        <a href="./index.html" class="link-burger">Главная</a>
+        <a href="./search.html" class="link-burger">Поиск</a>
+        <a href="./login.html" id="login-b" class="link-burger">Вход</a>
+        <a href="./register.html" id="register-b" class="link-burger">Регистрация</a>
+        <a href="" class="link-burger" id="logout-b" onclick="logoutUser()">Выход</a>
+    </div>
 </div>
 <main>
   <div class="criteria-warper">
@@ -59,9 +64,16 @@
     <input type="text" id="types" list="types-list" disabled placeholder="Выберите тип знака">
     <datalist id="types-list"></datalist>
   </div>
+  <div>
+    <label>Тип знака:</label>
+    <input type="date" id="date" placeholder="Выберите дату:">
+    
+  </div>
+  
 
   <button class="search-btn" onclick="searchSigns()">Поиск</button>
 </div>
+  <div id="results"></div>
   <div class="map-warper">
   <div id="map"></div>
 </div>
@@ -77,5 +89,6 @@
 
   <script src="../script/search.js"></script>
   <script src="../script/map.js"></script>
+  <script src="../script/script.js"></script>
 </body>
 </html>

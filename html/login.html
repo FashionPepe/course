@@ -1,0 +1,76 @@
+<head>
+    <title>Где знак?</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="../css/form.css">
+    <link rel="stylesheet" href="../css/styles.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="referrer" content="origin">
+</head>
+<body>
+    <header>
+        <div class="burger-menu">
+            <button class="burger-button" aria-label="Открыть меню">
+                ☰
+            </button>
+        </div>
+        <div class="logo-warper">
+            <img src="../img/f7up276s9ua.jpg" alt="Где знак?" class="logo">
+        </div>
+        <div class="menu-warper">
+            <a href="./index.html" class="link-menu">Главная</a>
+            <a href="./search.html" class="link-menu">Поиск</a>
+            <a href="./login.html" id="login" class="link-menu">Вход</a>
+            <a href="./register.html" id="register" class="link-menu">Регистрация</a>
+            <a href="" id="logout" onclick="logoutUser()" class="link-menu">Выход</a>
+
+        </div>
+    </header>
+    <div class="burger-overlay" aria-hidden="true">
+        <div class="burger-links">
+            <button class="close-button" aria-label="Закрыть меню">✖</button>
+            <a href="./index.html" class="link-burger">Главная</a>
+            <a href="./search.html" class="link-burger">Поиск</a>
+            <a href="./login.html" id="login-b" class="link-burger">Вход</a>
+            <a href="./register.html" id="register-b" class="link-burger">Регистрация</a>
+            <a href="" class="link-burger" id="logout-b" onclick="logoutUser()">Выход</a>
+        </div>
+    </div>
+    <div class="burger-overlay" aria-hidden="true">
+        <div class="burger-links">
+            <button class="close-button" aria-label="Закрыть меню">✖</button>
+            <a href="./index.html" class="link-burger">Главная</a>
+            <a href="./search.html" class="link-burger">Поиск</a>
+        </div>
+    </div>
+    <main>
+        <div class="container">
+            <!-- Login Form -->
+            <div class="form-container" id="login-form" onsubmit="event.preventDefault(); loginUser(email.value, password.value)">
+                <h2>Вход</h2>
+                <form>
+                    <label for="login-email">Эл. почта</label>
+                    <input type="email" id="email" name="email" placeholder="Введите электронную почту" required>
+                    
+                    <label for="login-password">Пароль</label>
+                    <input type="password" id="password" name="password" placeholder="Введите пароль" required>
+                    
+                    <button type="submit" class="btn">Login</button>
+                    <p>Нет аккаунта? <a href="./register.html" >Зарегистрироваться.</a></p>
+                </form>
+            </div>
+        </div>
+    </main>
+    
+        
+    
+    <footer>
+        <div class="footer-content">
+            <p>© 2025 Где знак? Все права защищены.</p>
+            <p>Сайт: gdeznak.ru</p>
+            <p>Поддержка: <a href="mailto:support@gdeznak.ru">support@gdeznak.ru</a></p>
+        </div>
+    </footer>
+    
+    <script src="../script/script.js"></script>
+</body>
+

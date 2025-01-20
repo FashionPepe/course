@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функция для переключения бургер-меню
     const toggleMenu = () => {
         burgerOverlay.classList.toggle('active');
+        console.log(localStorage.getItem('user'))
     };
 
     // Открыть бургер-меню
@@ -40,3 +41,83 @@ function moveSlide(direction) {
     const offset = -currentSlide * 100; // Сдвигаем на 100% влево для текущего слайда
     slider.style.transform = `translateX(${offset}%)`;
 }
+async function registerUser(name, email, password) {
+    const response = await fetch('../php/register.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `name=${name}&email=${email}&password=${password}`
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        alert('Registration successful!');
+        window.location.href = '/login'; // Перенаправляем на страницу входа
+    } else {
+        alert(data.error);
+    }
+}
+async function loginUser(email, password) {
+    const response = await fetch('../php/login.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `email=${email}&password=${password}`
+    });
+
+    const data = await response.json();
+
+    if (data.success) {
+        // Сохраняем информацию о пользователе в localStorage или sessionStorage
+        localStorage.setItem('user', JSON.stringify(data.user));
+        console.log(localStorage.getItem('user'))
+        //window.location.href = './index.html'; // Перенаправляем на личную страницу
+    } else {
+        alert(data.error);
+    }
+}
+function logoutUser() {
+    // Удаляем данные о пользователе из localStorage
+    localStorage.removeItem('user');
+    window.location.href = '/login'; // Перенаправляем на страницу входа
+}
+function initButtons(){
+    // Получаем данные о пользователе из localStorage
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    // Получаем ссылки на кнопки
+    const loginBtn = document.getElementById('login');
+    const logoutBtn = document.getElementById('logout');
+    const RegistrationBtn = document.getElementById('register');
+    const loginBtnb = document.getElementById('login-b');
+    const logoutBtnb = document.getElementById('logout-b');
+    const RegistrationBtnb = document.getElementById('register-b');
+    
+
+    // Если пользователь залогинен
+    if (user) {
+        
+        logoutBtn.style.display = 'block';
+        logoutBtnb.style.display = 'block';
+
+        
+        loginBtn.style.display = 'none';
+        RegistrationBtn.display = 'none'
+        loginBtnb.style.display = 'none';
+        RegistrationBtnb.display = 'none'
+    } else {
+        logoutBtn.style.display = 'none';
+        logoutBtnb.style.display = 'none';
+
+        
+        loginBtn.style.display = 'block';
+        RegistrationBtn.display = 'block'
+        loginBtnb.style.display = 'block';
+        RegistrationBtnb.display = 'block'
+    }
+}
+window.onload = initButtons;
+

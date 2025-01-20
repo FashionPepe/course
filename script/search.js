@@ -1,3 +1,4 @@
+
 document.addEventListener('DOMContentLoaded', () => {
   const burgerButton = document.querySelector('.burger-button');
   const closeButton = document.querySelector('.close-button');
@@ -87,41 +88,45 @@ const apiUrl = '../php/api.php'; // URL PHP API
 
     // Поиск знаков
     async function searchSigns() {
+      
       const streetName = document.getElementById('streets').value;
       const typeName = document.getElementById('types').value;
-
-      if (!streetName || !typeName) {
-        alert('Выберите улицу и тип знака');
-        return;
+      const date = document.getElementById('date').value;
+  
+      if (!streetName || !typeName || !date) {
+          alert('Пожалуйста, заполните все поля для поиска.');
+          return;
       }
-
-      // Найдем id улицы и типа знака по их имени
+  
+      // Найти ID улицы и типа знака по имени
       const street = streets.flat().find(st => st.name === streetName);
       const type = types.find(t => t.name === typeName);
-
+  
       if (!street || !type) {
-        alert('Неверные данные для поиска.');
-        return;
+          alert('Выбранные значения некорректны.');
+          return;
       }
-
-      // Отправляем запрос с id улицы и типа знака
-      const response = await fetch(`${apiUrl}?type=search&street_id=${street.id}&type_id=${type.id}`);
+  
+      const response = await fetch(
+          `${apiUrl}?type=search&street_id=${street.id}&type_id=${type.id}&date=${encodeURIComponent(date)}`
+      );
       const signs = await response.json();
-
+  
       const results = document.getElementById('results');
-      results.innerHTML = ''; // Очистить предыдущие результаты
-
+      results.innerHTML = '';
+  
       if (signs.length === 0) {
-        results.textContent = 'Знаки не найдены.';
-        return;
+          results.textContent = 'Знаки не найдены.';
+          return;
       }
-
+      
       signs.forEach(sign => {
-        const div = document.createElement('div');
-        div.textContent = `ID: ${sign.id}, Координаты: (${sign.latitude}, ${sign.longitude}), Тип: ${sign.type_name}`;
-        results.appendChild(div);
+          const div = document.createElement('div');
+          div.textContent = `ID: ${sign.id}, Координаты: (${sign.latitude}, ${sign.longitude}), Тип: ${sign.type_name}`;
+          results.appendChild(div);
+          createMarker([sign.longitude, sign.latitude])
       });
-    }
-
+  }
+  
     // Инициализация
     loadDistricts();
