@@ -1,93 +1,123 @@
-import requests
-import json
 import re
+import requests
+import pandas as pd
+from sqlalchemy import create_engine
 
-# Ваш API-ключ
-api_key = "78183bb9-c954-499c-8c6f-72a64f1eb62d"
-url = f"https://apidata.mos.ru/v1/datasets/62681/rows?api_key={api_key}"
+# Подключение к базе данных
+engine = create_engine('mysql+pymysql://root@localhost/signs')
 
-# Списки для хранения данных
-list_adm = []
-list_areas = []
-list_streets = []
-list_cords = []
-list_names = []
-list_signs = []
-cords_to_streets = []  # Новый список для связи координат и улиц
+# Алгоритм для извлечения улиц
+def extract_streets(address):
+    words = ['улица', 'ул', 'переулок', 'шоссе', 'проспект', 'площадь', 'проезд',
+             'село', 'аллея', 'бульвар', 'набережная', 'тупик', 'линия']
+    
+    str_pat = r"\b([^,]*?(?:{})\b[^,]*)".format("|".join(words))
+    matches = re.findall(str_pat, address, flags=re.I)
+    
+    return [match.strip() for match in matches] if matches else []
 
-# Регулярное выражение для поиска названий улиц
-words = [
-    'улица', 'ул', 'переулок', 'шоссе', 'проспект', 'площадь', 'проезд',
-    'село', 'аллея', 'бульвар', 'набережная', 'тупик', 'линия'
-]
-str_pat = r".*,\s*\b([^,]*?(?:{})\b[^,]*)[,$]+".format("|".join(words))
+# Очищаем таблицы и сбрасываем автоинкремент
+def clear_database():
+    engine.execute("SET FOREIGN_KEY_CHECKS = 0;")
+    engine.execute("TRUNCATE TABLE signs;")
+    engine.execute("TRUNCATE TABLE types;")
+    engine.execute("TRUNCATE TABLE coordinates;")
+    engine.execute("TRUNCATE TABLE streets;")
+    engine.execute("TRUNCATE TABLE areas;")
+    engine.execute("TRUNCATE TABLE administrative_districts;")
+    engine.execute("TRUNCATE TABLE coordinates_streets;")
+    engine.execute("SET FOREIGN_KEY_CHECKS = 1;")
 
-# Функция для добавления элемента в список, если он отсутствует, и возвращения его индекса
-def add_to_list(item, target_list):
-    if item not in target_list:
-        target_list.append(item)
-    return target_list.index(item) + 1
+# Добавление района и округа
+def add_district_and_area(row):
+    district_name = row['Cells.District']
+    area_name = row['Cells.AdmArea']
+    # Добавляем административный округ в таблицу administrative_districts
+    district_id = engine.execute(f"SELECT id FROM administrative_districts WHERE name = '{area_name}'").fetchone()
+    if not district_id:
+        engine.execute(f"INSERT INTO administrative_districts (name) VALUES ('{area_name}')")
+        district_id = engine.execute(f"SELECT id FROM administrative_districts WHERE name = '{area_name}'").fetchone()
+    # Добавляем район в таблицу areas
+    area_id = engine.execute(f"SELECT id FROM areas WHERE name = '{district_name}'").fetchone()
+    if not area_id:
+        engine.execute(f"INSERT INTO areas (name, id_admin_district) VALUES ('{district_name}', '{district_id[0]}')")
+        area_id = engine.execute(f"SELECT id FROM areas WHERE name = '{district_name}'").fetchone()
+    
+    return area_id[0], district_id[0]
 
-try:
-    # Выполняем запрос к API
-    response = requests.get(url)
-    response.raise_for_status()  # Проверяем статус ответа
-    signs = response.json()  # Парсим ответ в JSON
+# Вставка типа знака
+def insert_sign_type(sign_type):
+    sign_type_id = engine.execute(f"SELECT id FROM types WHERE name = '{sign_type}'").fetchone()
+    if not sign_type_id:
+        engine.execute(f"INSERT INTO types (name) VALUES ('{sign_type}')")
+        sign_type_id = engine.execute(f"SELECT id FROM types WHERE name = '{sign_type}'").fetchone()
+    return sign_type_id[0]
 
-    for item in signs:
-        cells = item.get('Cells', {})
+# Вставка координат
+def insert_coordinates(latitude, longitude):
+    coordinate_id = engine.execute(f"SELECT id FROM coordinates WHERE latitude = {latitude} AND longitude = {longitude}").fetchone()
+    if not coordinate_id:
+        engine.execute(f"INSERT INTO coordinates (latitude, longitude) VALUES ({latitude}, {longitude})")
+        coordinate_id = engine.execute(f"SELECT id FROM coordinates WHERE latitude = {latitude} AND longitude = {longitude}").fetchone()
+    return coordinate_id[0]
 
-        # 1. Административный округ
-        adm = cells.get('AdmArea', '').strip()
-        adm_idx = add_to_list(adm, list_adm) if adm else None
+# Вставка улицы
+def insert_street(street_name, id_area):
+    street_id = engine.execute(f"SELECT id FROM streets WHERE name = '{street_name}'").fetchone()
+    if not street_id:
+        engine.execute(f"INSERT INTO streets (name, id_area) VALUES ('{street_name}', '{id_area}')")
+        street_id = engine.execute(f"SELECT id FROM streets WHERE name = '{street_name}'").fetchone()
+    return street_id[0]
 
-        # 2. Район и его принадлежность к округу
-        area = cells.get('District', '').strip()
-        area_idx = None
-        if area and adm_idx:
-            area_idx = add_to_list([area, adm_idx], list_areas)
+# Загрузка и обработка данных
+def process_and_insert_data(api_url):
+    response = requests.get(api_url)
+    data = response.json()
+    
+    df = pd.json_normalize(data)
+    
+    for _, row in df.iterrows():
+        # Добавление района и округа
+        area_id, district_id = add_district_and_area(row)
+        
+        # Извлечение данных знаков и координат
+        sign_id = row['Cells.ID']
+        sign_type = row['Cells.SignType']
+        latitude = row['Cells.Latitude_WGS84']
+        longitude = row['Cells.Longitude_WGS84']
+        location = row['Cells.Location']
+        
+        # Извлечение всех улиц
+        street_names = extract_streets(location)
 
-        # 3. Улицы и их принадлежность к району
-        location = cells.get('Location', '').strip()
-        street_idx = None
-        if location:
-            match = re.search(str_pat, location, flags=re.I)
-            if match:
-                street = match.group(1).strip()
-                if street and area_idx:
-                    street_idx = add_to_list([street, area_idx], list_streets)
+        # Вставка типа знака и координат
+        sign_type_id = insert_sign_type(sign_type)
+        coordinate_id = insert_coordinates(latitude, longitude)
 
-        # 4. Координаты
-        coordinates = cells.get('geoData', {}).get('coordinates', [])
-        cord_idx = None
-        if coordinates:
-            cord_idx = add_to_list(coordinates, list_cords)
+        # Вставка знака
+        engine.execute(f"INSERT INTO signs (id, id_type, id_coordinate) VALUES ({sign_id}, {sign_type_id}, {coordinate_id})")
+        
+        # Вставка всех улиц, если они найдены
+        for street_name in street_names:
+            street_id = insert_street(street_name, area_id)
+            # Проверка наличия записи в coordinates_streets
+            check = engine.execute(f"""
+                SELECT * FROM coordinates_streets 
+                WHERE id_coordinate = {coordinate_id} AND id_street = {street_id}
+            """).fetchone()
+            if not check:
+                engine.execute(f"INSERT INTO coordinates_streets (id_coordinate, id_street) VALUES ({coordinate_id}, {street_id})")
 
-        # 5. Связь координат и улиц
-        if cord_idx and street_idx:
-            connection = [cord_idx, street_idx]
-            if connection not in cords_to_streets:
-                cords_to_streets.append(connection)
+# Основная логика
+def main():
+    # Очищаем таблицы
+    clear_database()
+    skip = 0
+    while skip < 566464:
+        
+        api_url = f"https://apidata.mos.ru/v1/datasets/62681/rows?api_key=78183bb9-c954-499c-8c6f-72a64f1eb62d&$skip={skip}&$top=1000"
+        process_and_insert_data(api_url)
+        skip += 1000
+        print(f"Processing batch starting at {skip}")
 
-        # 6. Названия объектов
-        name = cells.get('SignType', 'Без названия').strip()
-        name_idx = add_to_list(name, list_names)
-
-        # 7. Знаки (ID, индекс названия, индекс координат)
-        sign_id = cells.get('ID', None)
-        if sign_id:
-            list_signs.append([sign_id, name_idx, cord_idx])
-
-    # Выводим результат
-    print("Округа:", list_adm)
-    print("Районы:", list_areas)
-    print("Улицы:", list_streets)
-    print("Координаты:", list_cords)
-    print("Наименования:", list_names)
-    print("Знаки:", list_signs)
-    print("Связь координат и улиц:", cords_to_streets)
-
-except requests.exceptions.RequestException as e:
-    print(f"Ошибка при выполнении запроса: {e}")
-except json.JSONDecodeError as e:
-    print(f"Ошибка декодирования JSON: {e}")
+main()
