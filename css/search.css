@@ -11,7 +11,7 @@
     
   }
   
-  h1 {
+  .criteria-warper h1 {
     font-size: 24px;
     margin-bottom: 20px;
     text-align: center;
@@ -59,6 +59,7 @@
     border-radius: 5px;
     background-color: #f9f9f9;
     color: #333;
+    font-family: Arial;
   }
   
   input[type="date"]:disabled {
@@ -93,9 +94,14 @@
   }
   main{
     display: flex;
+    flex-direction: column;
+    
+    
+  }
+  .content-warper{
+    display: flex;
     flex-direction: row;
     justify-content: space-around;
-    
   }
   .map-warper{
     width: 100%;
@@ -105,23 +111,69 @@
     overflow: hidden;
     margin-left: 20px;
   }
+  #results{
+    min-width: 300px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+    margin-top: 75px;
+    margin-left: 10px;
+    display: none;
+    overflow: auto;
+    height: 620px;
+    
+  }
+  .sign-info{
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+   
+    display: none;
+    align-items: center;
+    flex-direction: column;
+  }
   @media (max-width: 1050px) {
-    main{
+    
+    .content-warper{
       flex-direction: column;
       justify-content: center;
-      align-items: center;
-    }
+      align-items: center;}
     .criteria-warper{
-        max-width: 80%;
+      max-width: 80%;
     }
     .map-warper{
       margin-top: 10px;
       margin-left: 0px;
     }
+    #results{
+      margin-top: 10px;
+      max-width: 80%;
+      height: unset;
+      overflow: unset;
+    }
     
 }
-  @media (max-width: 480px) {
+  @media (max-width: 700px) {
     .criteria-warper{
         max-width: 280px;
     }
+    
+
+}
+.marker {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background-color: #FF6347; /* Цвет маркера (Томато) */
+  border-radius: 50%; /* Сделаем маркер круглым */
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Легкая тень для маркера */
+  transform: translate(-50%, -50%); /* Центрирование маркера относительно его точки */
+  transition: transform 0.2s ease, background-color 0.3s ease; /* Плавные эффекты при взаимодействии */
+}
+.marker:hover {
+  transform: translate(-50%, -50%) scale(1.2); /* Увеличение маркера при наведении */
+  background-color: #FF4500; /* Изменение цвета маркера на более яркий */
 }

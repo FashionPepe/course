@@ -25,7 +25,7 @@ async function initMap() {
 }
 
 // Функция для создания маркера
-window.createMarker =  async function (coordinates) {
+window.createMarker =  async function (coordinates, data, id) {
     // Дождемся полной загрузки API Yandex Maps 3
     await ymaps3.ready;
 
@@ -33,10 +33,20 @@ window.createMarker =  async function (coordinates) {
 
     // Создаем элемент для маркера
     const markerElement = document.createElement('div');
-    markerElement.className = 'marker-class';
-    markerElement.innerText = "I'm a marker!";
+    markerElement.className = 'marker';
+   
     markerElement.addEventListener('click', function() {
-        alert("Маркер");
+        initActButtons(localStorage.getItem('id_user'), id)
+        let info = document.getElementById('sign-info')
+        
+        let infoText = document.getElementById('inner-text')
+        infoText.innerHTML = data
+        info.setAttribute('id_sign', id)
+        
+        info.style.display = 'flex'
+        
+
+
     });
 
     // Создаем маркер
@@ -55,6 +65,7 @@ window.createMarker =  async function (coordinates) {
         console.error('Карта не инициализирована');
     }
     console.error('создан знак');
+    markers.push(marker)
 }
 
 // Инициализируем карту и маркер

@@ -24,13 +24,24 @@ header {
 .logo-warper {
     display: inline-block;
     margin-left: 40px;
+    margin-top: 10px;
+
+    
 }
 
 .logo {
     width: 50px;
     height: auto;
+    
 }
-
+.name-warper{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.name-warper h1{
+    margin-left: 10px;
+}
 .menu-warper {
     display: flex;
     justify-content: space-around;
@@ -132,14 +143,14 @@ header {
     }
 }
 
-@media (max-width: 480px) {
+@media (max-width: 700px) {
     .menu-warper {
         display: none;
     }
     .burger-menu {
         display: flex;
     }
-    .logo-warper{
+    .name-warper{
         margin-right: 40px;
         margin-left: 0px;
     }

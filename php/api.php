@@ -12,10 +12,12 @@ function executeQuery($conn, $query, $params = []) {
     $stmt->execute();
     $result = $stmt->get_result();
     $data = [];
+    if($result){
     while ($row = $result->fetch_assoc()) {
         $data[] = $row;
     }
     $stmt->close();
+}
     return $data;
 }
 
@@ -57,7 +59,7 @@ if ($type === 'districts') {
 
     if ($streetId && $typeId && $date) {
         $query = "
-            SELECT s.id, c.latitude, c.longitude, t.name AS type_name
+            SELECT s.id, c.latitude, c.longitude, t.name AS type_name, st.date as date
             FROM signs s
             JOIN coordinates c ON s.id_coordinate = c.id
             JOIN types t ON s.id_type = t.id
@@ -68,7 +70,34 @@ if ($type === 'districts') {
     } else {
         $data = ['error' => 'Missing parameters for search'];
     }
-} else {
+}elseif($type == 'addToFavorites'){
+    $id_user = isset($_GET['idUser']) ? $_GET['idUser'] : null;
+    $id_sign = isset($_GET['idSign']) ? $_GET['idSign'] : null;
+    $query = "INSERT INTO favorites(id_user, id_sign) VALUES (?, ?)";
+    $data = executeQuery($conn, $query, [$id_user, $id_sign]);
+}elseif($type == 'getFavorites'){
+    $id_user = isset($_GET['idUser']) ? $_GET['idUser'] : null;
+    $query = "SELECT * FROM favorites WHERE id_user = ?";
+    $data = executeQuery($conn, $query, [$id_user]);
+}elseif($type == 'getFavoritesFull'){
+    $id_user = isset($_GET['idUser']) ? $_GET['idUser'] : null;
+    $query = "SELECT s.id, c.latitude, c.longitude, t.name AS type_name, st.date as date
+            FROM signs s
+            JOIN coordinates c ON s.id_coordinate = c.id
+            JOIN types t ON s.id_type = t.id
+            JOIN coordinates_streets cs ON c.id = cs.id_coordinate
+            JOIN statuses st ON st.id_sign = s.id
+            JOIN favorites fav ON fav.id_sign = s.id
+            JOIN users us ON us.id = fav.id_user
+            WHERE us.id = ?";
+    $data = executeQuery($conn, $query, [$id_user]);
+}elseif($type == 'deleteToFavorites'){
+    $id_user = isset($_GET['idUser']) ? $_GET['idUser'] : null;
+    $id_sign = isset($_GET['idSign']) ? $_GET['idSign'] : null;
+    $query = "DELETE FROM favorites WHERE id_user = ? AND id_sign = ?";
+    $data = executeQuery($conn, $query, [$id_user, $id_sign]);
+}
+ else {
     $data = ['error' => 'Invalid request'];
 }
 

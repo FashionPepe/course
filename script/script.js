@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Функция для переключения бургер-меню
     const toggleMenu = () => {
         burgerOverlay.classList.toggle('active');
-        console.log(localStorage.getItem('user'))
+        
     };
 
     // Открыть бургер-меню
@@ -53,8 +53,8 @@ async function registerUser(name, email, password) {
     const data = await response.json();
 
     if (data.success) {
-        alert('Registration successful!');
-        window.location.href = '/login'; // Перенаправляем на страницу входа
+        alert('Регистрация успешна!');
+        window.location.href = './login.php'; // Перенаправляем на страницу входа
     } else {
         alert(data.error);
     }
@@ -73,8 +73,9 @@ async function loginUser(email, password) {
     if (data.success) {
         // Сохраняем информацию о пользователе в localStorage или sessionStorage
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('id_user', JSON.stringify(data.user.id));
         console.log(localStorage.getItem('user'))
-        //window.location.href = './index.html'; // Перенаправляем на личную страницу
+        window.location.href = './index.html'; // Перенаправляем на личную страницу
     } else {
         alert(data.error);
     }
@@ -82,7 +83,8 @@ async function loginUser(email, password) {
 function logoutUser() {
     // Удаляем данные о пользователе из localStorage
     localStorage.removeItem('user');
-    window.location.href = '/login'; // Перенаправляем на страницу входа
+    localStorage.removeItem('id_user');
+    window.location.href = '#'; // Перенаправляем на страницу входа
 }
 function initButtons(){
     // Получаем данные о пользователе из localStorage
@@ -95,6 +97,8 @@ function initButtons(){
     const loginBtnb = document.getElementById('login-b');
     const logoutBtnb = document.getElementById('logout-b');
     const RegistrationBtnb = document.getElementById('register-b');
+    const fav = document.getElementById('fav');
+    const favb = document.getElementById('fav-b');
     
 
     // Если пользователь залогинен
@@ -102,21 +106,26 @@ function initButtons(){
         
         logoutBtn.style.display = 'block';
         logoutBtnb.style.display = 'block';
+        fav.style.display = 'block';
+        favb.style.display = 'block';
+
 
         
         loginBtn.style.display = 'none';
-        RegistrationBtn.display = 'none'
+        RegistrationBtn.style.display = 'none'
         loginBtnb.style.display = 'none';
-        RegistrationBtnb.display = 'none'
+        RegistrationBtnb.style.display = 'none'
     } else {
         logoutBtn.style.display = 'none';
         logoutBtnb.style.display = 'none';
+        fav.style.display = 'none';
+        favb.style.display = 'none';
 
         
         loginBtn.style.display = 'block';
-        RegistrationBtn.display = 'block'
+        RegistrationBtn.style.display = 'block'
         loginBtnb.style.display = 'block';
-        RegistrationBtnb.display = 'block'
+        RegistrationBtnb.style.display = 'block'
     }
 }
 window.onload = initButtons;
