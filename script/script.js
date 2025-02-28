@@ -73,6 +73,7 @@ async function loginUser(email, password) {
     if (data.success) {
         // Сохраняем информацию о пользователе в localStorage или sessionStorage
         localStorage.setItem('user', JSON.stringify(data.user));
+        localStorage.setItem('name', JSON.stringify(data.user.name));
         localStorage.setItem('id_user', JSON.stringify(data.user.id));
         console.log(localStorage.getItem('user'))
         window.location.href = './index.html'; // Перенаправляем на личную страницу
@@ -99,11 +100,11 @@ function initButtons(){
     const RegistrationBtnb = document.getElementById('register-b');
     const fav = document.getElementById('fav');
     const favb = document.getElementById('fav-b');
-    
+    const name = document.getElementById('name')
 
     // Если пользователь залогинен
     if (user) {
-        
+        name.innerHTML = localStorage.getItem('name').slice(1, -1)
         logoutBtn.style.display = 'block';
         logoutBtnb.style.display = 'block';
         fav.style.display = 'block';

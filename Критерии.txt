@@ -1,0 +1,3 @@
+На оценку 4: 2, 3, 5, 7, 9, 10.
+На оценку 5: 2, 5.
+Репозиторий: https://github.com/FashionPepe/course

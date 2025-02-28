@@ -89,13 +89,22 @@ if ($type === 'districts') {
             JOIN statuses st ON st.id_sign = s.id
             JOIN favorites fav ON fav.id_sign = s.id
             JOIN users us ON us.id = fav.id_user
-            WHERE us.id = ?";
+            WHERE us.id = ? AND st.date =  GetNearestDate(CURDATE())";
     $data = executeQuery($conn, $query, [$id_user]);
 }elseif($type == 'deleteToFavorites'){
     $id_user = isset($_GET['idUser']) ? $_GET['idUser'] : null;
     $id_sign = isset($_GET['idSign']) ? $_GET['idSign'] : null;
     $query = "DELETE FROM favorites WHERE id_user = ? AND id_sign = ?";
     $data = executeQuery($conn, $query, [$id_user, $id_sign]);
+}
+elseif($type == 'sendProposal'){
+    $street = isset($_GET['street']) ? $_GET['street'] : null;
+    $typeSign = isset($_GET['typeSign']) ? $_GET['typeSign'] : null;
+    $add = isset($_GET['add']) ? $_GET['add'] : null;
+    $comm = isset($_GET['comm']) ? $_GET['comm'] : null;
+    $query = "INSERT INTO proposals( id_street, id_type, additioanal, commentary) VALUES (?,?, ?, ?)";
+    $data = executeQuery($conn, $query, [$street, $typeSign, $add, $comm]);
+    
 }
  else {
     $data = ['error' => 'Invalid request'];

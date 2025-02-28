@@ -186,3 +186,17 @@ const apiUrl = '../php/api.php'; // URL PHP API
   }
     // Инициализация
     loadDistricts();
+    async function sendProposal(add, comm) {
+      const streetName = document.getElementById('streets').value;
+      const typeName = document.getElementById('types').value;
+      let street = streets.flat().find(st => st.name === streetName);
+      let type = types.find(t => t.name === typeName);
+  
+      const response = await fetch(
+        `${apiUrl}?type=sendProposal&street=${street.id}&typeSign=${type.id}&add=${add}&comm=${comm}`
+    );
+      const res = await response.json()
+      if(res){
+        alert("Ваше замечание отправлено")
+      }
+    }

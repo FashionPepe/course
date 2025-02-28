@@ -4,7 +4,7 @@ async function placeFav() {
     );
       const res = await response.json()
       console.log(res)
-      
+      const results = document.getElementById('results');
       res.forEach(sign => {
         const div = document.createElement('div');
         let data = `ID: ${sign.id},<br> Координаты: (${sign.latitude},<br> ${sign.longitude}),<br> Тип: ${sign.type_name},<br> Дата актуальности: ${sign.date}`
@@ -12,6 +12,7 @@ async function placeFav() {
         results.appendChild(div);
         createMarker([sign.longitude, sign.latitude], data, sign.id)
     });
+    results.style.display = 'block'
       
 }
 placeFav()

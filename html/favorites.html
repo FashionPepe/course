@@ -30,8 +30,9 @@
         <a href="./login.html" id="login" class="link-menu">Вход</a>
         <a href="./register.html" id="register" class="link-menu">Регистрация</a>
         <a href="./favorites.html" id="fav" class="link-menu">Избранное</a>
+        <p id="name"></p>
         <a href="" id="logout" onclick="logoutUser()" class="link-menu">Выход</a>
-
+        
     </div>
 </header>
 <div class="burger-overlay" aria-hidden="true">
@@ -48,8 +49,10 @@
 <main>
   <div class="content-warper">
   
-  
-<div id="results"></div>
+<div>
+  <h1 style="margin-top: 100px;">Избранное</h1>
+<div style="margin-top: 0; height: 70%;" id="results"></div>
+</div>  
   <div class="map-warper">
   <div id="map"></div>
 </div>

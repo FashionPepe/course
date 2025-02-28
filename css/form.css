@@ -24,7 +24,18 @@ input {
     background-color: #f9f9f9;
     color: #333;
   }
-  
+  textarea{
+    width: 100%;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+    color: #333;
+    margin-bottom: 10px;
+    height: 100px;
+    font-family: Arial;
+    }
   input:focus {
     border-color: #4a90e2;
     outline: none;
